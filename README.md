@@ -18,7 +18,7 @@ Usage
 -----
 
 `./kubectl-repl` first starts by asking you for namespace. You may enter any of the strings verbatim,
-or any abbreviation that is closest. Additionally, you may use any of the variables REPL assigned ($2).
+or any abbreviation that is closest. Additionally, you may use any of the variables REPL assigned (`$2`).
 
 Then you are in the main REPL mode. You are presented with a prompt, into which you enter `kubectl` commands
 (`kubectl -n $NS` prefix is implied).
@@ -26,7 +26,7 @@ Then you are in the main REPL mode. You are presented with a prompt, into which 
 The prompt can be exited with traditional *eof* or *sigint*, and an explicit `quit` or `exit` command.
 
 I recommend using [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`, such as
-`rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.   
+`rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.
 
 
 Shell integration
@@ -60,3 +60,11 @@ $2 	app-deployment-314667899-xr47k       1/1       Running   0          22h
 + kubectl -n sentry logs app-deployment-314667899-xr47k
 ```
 The `$2` was substituted for `app-deployment-314667899-xr47k`.
+
+Builtin variables have priority before shell variables from env, but both can be used: 
+
+```console
+$ env TYPE=pod rlwrap ./kubectl-repl -verbose
+# default get $TYPE
++ kubectl -n default get $TYPE
+```
