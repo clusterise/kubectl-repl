@@ -1,4 +1,0 @@
-package src
-
-func main() {
-}

@@ -1,2 +1,2 @@
 build:
-	go build  -o kubectl-repl src/main.go
+	go build -o kubectl-repl main/*.go
