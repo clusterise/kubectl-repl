@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"strings"
 	"log"
-	"github.com/texttheater/golang-levenshtein/levenshtein"
-	"math"
 )
 
 var (
@@ -23,33 +21,6 @@ func prompt(text string) (string, error) {
 		return "", err
 	}
 	return strings.Trim(response, "\n"), nil
-}
-
-func mostSimilar(value string, targets []string) string {
-	valueRunes := []rune(value)
-	ops := levenshtein.Options{
-		InsCost: 0,
-		SubCost: 5,
-		DelCost: 10,
-		Matches: levenshtein.DefaultOptions.Matches,
-	}
-
-	distances := make(map[string]int, len(targets))
-	for _, target := range targets {
-		distances[target] = levenshtein.DistanceForStrings(valueRunes, []rune(target), ops)
-	}
-
-	best := struct {
-		Distance int
-		Value string
-	}{math.MaxInt64,""}
-	for target, distance := range distances {
-		if distance < best.Distance {
-			best.Distance = distance
-			best.Value = target
-		}
-	}
-	return best.Value
 }
 
 func pickNamespace() error {
@@ -68,7 +39,7 @@ func pickNamespace() error {
 	if err != nil {
 		return err
 	}
-	Namespace = mostSimilar(response, targets)
+	Namespace = ClosestString(response, targets)
 	return nil
 }
 
@@ -82,7 +53,7 @@ func switchNamespace(ns string) error {
 	for num, ns := range namespaces.Items {
 		targets[num] = ns.Name
 	}
-	Namespace = mostSimilar(ns, targets)
+	Namespace = ClosestString(ns, targets)
 	return nil
 }
 
