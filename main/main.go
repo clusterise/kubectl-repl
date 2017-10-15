@@ -14,7 +14,6 @@ import (
 var (
 	Input *bufio.Reader
 	Namespace string
-	Variables map[string]string
 	Verbose bool
 )
 
@@ -25,10 +24,7 @@ func prompt(text string) (string, error) {
 		return "", err
 	}
 	response := strings.Trim(line, "\n")
-	for from, to := range Variables {
-		response = strings.Replace(response, from, to, -1)
-	}
-	return response, nil
+	return SubstituteForVars(response), nil
 }
 
 func namespaceSelector(selector func([]string)(string, error)) error {
@@ -51,14 +47,14 @@ func namespaceSelector(selector func([]string)(string, error)) error {
 }
 
 func printIndexedLine(index, line string) {
-	coloredIndex := color.New(color.FgBlue).Sprintf("%s", index)
+	coloredIndex := color.New(color.FgBlue).Sprintf("$%s", index)
 	fmt.Printf("%s \t%s\n", coloredIndex, line)
 }
 
 func pickNamespace() error {
 	return namespaceSelector(func(namespaces []string) (string, error) {
 		for n, ns := range namespaces {
-			key := fmt.Sprintf("$%d", n)
+			key := fmt.Sprintf("%d", n)
 			Variables[key] = ns
 			printIndexedLine(key, ns)
 		}
@@ -103,9 +99,10 @@ func repl() error {
 				fmt.Printf("   \t%s\n", line)
 			} else {
 				variableIndex++
-				printIndexedLine(fmt.Sprintf("$%v", variableIndex), line)
+				key := fmt.Sprintf("%d", variableIndex)
+				printIndexedLine(key, line)
 			}
-			key := fmt.Sprintf("$%d", variableIndex)
+			key := fmt.Sprintf("%d", variableIndex)
 			Variables[key] = strings.Split(line, " ")[0]
 		}
 	} else {
