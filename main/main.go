@@ -13,6 +13,7 @@ import (
 var (
 	Input *bufio.Reader
 	Namespace string
+	Variables map[string]string
 )
 
 func prompt(text string) (string, error) {
@@ -76,8 +77,27 @@ func repl() error {
 	if err != nil {
 		return err
 	}
+
+	for from, to := range Variables {
+		command = strings.Replace(command, from, to, -1)
+	}
+
 	output, err := KubectlSh(command)
-	fmt.Println(string(output))
+
+	if strings.HasPrefix(command, "get") {
+		for index, line := range strings.Split(output, "\n") {
+			key := fmt.Sprintf("$%d", index)
+			Variables[key] = strings.Split(line, " ")[0]
+
+			if strings.HasPrefix(line, "NAME ") {
+				fmt.Printf("   \t%s\n", line)
+			} else {
+				fmt.Printf("$%v \t%s\n", index, line)
+			}
+		}
+	} else {
+		fmt.Println(output)
+	}
 	return err
 }
 
@@ -88,6 +108,7 @@ func assert(v interface{}) {
 }
 
 func main() {
+	Variables = make(map[string]string)
 	Input = bufio.NewReader(os.Stdin)
 	assert(KubernetesSetup())
 	assert(pickNamespace())
