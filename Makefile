@@ -1,2 +1,3 @@
-build:
-	go build -o kubectl-repl main/*.go
+GOFILES = main/*.go
+build: ${GOFILES}
+	go build -o kubectl-repl ${GOFILES}
