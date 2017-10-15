@@ -6,16 +6,19 @@ import (
 	"fmt"
 	"strings"
 	"log"
+	"flag"
+	"github.com/fatih/color"
 )
 
 var (
 	Input *bufio.Reader
 	Namespace string
 	Variables map[string]string
+	Verbose bool
 )
 
 func prompt(text string) (string, error) {
-	fmt.Print(text + " ")
+	fmt.Print(color.New(color.Bold).Sprintf(text + " "))
 	line, err := Input.ReadString('\n')
 	if err != nil {
 		return "", err
@@ -46,14 +49,19 @@ func namespaceSelector(selector func([]string)(string, error)) error {
 	return nil
 }
 
+func printIndexedLine(index, line string) {
+	coloredIndex := color.New(color.FgBlue).Sprintf("%s", index)
+	fmt.Printf("%s \t%s\n", coloredIndex, line)
+}
+
 func pickNamespace() error {
 	return namespaceSelector(func(namespaces []string) (string, error) {
 		for n, ns := range namespaces {
 			key := fmt.Sprintf("$%d", n)
 			Variables[key] = ns
-			fmt.Printf("%s \t%s\n", key, ns)
+			printIndexedLine(key, ns)
 		}
-		return prompt("Select namespace:")
+		return prompt("# namespace")
 	})
 }
 
@@ -64,7 +72,7 @@ func switchNamespace(ns string) error {
 }
 
 func repl() error {
-	command, err := prompt(Namespace)
+	command, err := prompt("# " + Namespace)
 	if err != nil {
 		return err
 	}
@@ -79,7 +87,7 @@ func repl() error {
 		return nil
 	}
 
-	output, err := KubectlSh(Namespace, command)
+	output, err := KubectlSh(command)
 
 	if strings.HasPrefix(command, "get") {
 		variableIndex := 0
@@ -88,7 +96,7 @@ func repl() error {
 				fmt.Printf("   \t%s\n", line)
 			} else {
 				variableIndex++
-				fmt.Printf("$%v \t%s\n", variableIndex, line)
+				printIndexedLine(fmt.Sprintf("$%v", variableIndex), line)
 			}
 			key := fmt.Sprintf("$%d", variableIndex)
 			Variables[key] = strings.Split(line, " ")[0]
@@ -106,6 +114,9 @@ func assert(v interface{}) {
 }
 
 func main() {
+	flag.BoolVar(&Verbose, "verbose", false, "Verbose")
+	flag.Parse()
+
 	Variables = make(map[string]string)
 	Input = bufio.NewReader(os.Stdin)
 	assert(KubernetesSetup())
