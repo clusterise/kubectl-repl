@@ -79,6 +79,9 @@ func repl() error {
 	}
 
 	parts := strings.Split(command, " ")
+	if parts[0] == "exit" || parts[0] == "quit" {
+		os.Exit(0)
+	}
 	if parts[0] == "namespace" || parts[0] == "ns" {
 		if len(parts) > 1 {
 			switchNamespace(parts[1])
