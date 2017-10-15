@@ -79,7 +79,7 @@ func repl() error {
 		return nil
 	}
 
-	output, err := KubectlSh(command)
+	output, err := KubectlSh(Namespace, command)
 
 	if strings.HasPrefix(command, "get") {
 		variableIndex := 0
