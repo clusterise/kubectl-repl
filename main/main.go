@@ -72,6 +72,20 @@ func pickNamespace() error {
 	return nil
 }
 
+func switchNamespace(ns string) error {
+	namespaces, err := GetNamespaces()
+	if err != nil {
+		return err
+	}
+
+	targets := make([]string, len(namespaces.Items))
+	for num, ns := range namespaces.Items {
+		targets[num] = ns.Name
+	}
+	Namespace = mostSimilar(ns, targets)
+	return nil
+}
+
 func repl() error {
 	command, err := prompt(Namespace)
 	if err != nil {
@@ -80,6 +94,16 @@ func repl() error {
 
 	for from, to := range Variables {
 		command = strings.Replace(command, from, to, -1)
+	}
+
+	parts := strings.Split(command, " ")
+	if parts[0] == "namespace" || parts[0] == "ns" {
+		if len(parts) > 1 {
+			switchNamespace(parts[1])
+		} else {
+			pickNamespace()
+		}
+		return nil
 	}
 
 	output, err := KubectlSh(command)
@@ -115,6 +139,6 @@ func main() {
 	assert(pickNamespace())
 
 	for {
-		assert(repl())
+		repl()
 	}
 }
