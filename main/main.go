@@ -17,7 +17,7 @@ var (
 )
 
 func prompt(text string) (string, error) {
-	fmt.Printf("%s: ", text)
+	fmt.Print(text + " ")
 	response, err := Input.ReadString('\n')
 	if err != nil {
 		return "", err
@@ -64,7 +64,7 @@ func pickNamespace() error {
 		targets[num] = ns.Name
 	}
 
-	response, err := prompt("Select namespace")
+	response, err := prompt("Select namespace:")
 	if err != nil {
 		return err
 	}
@@ -85,15 +85,16 @@ func repl() error {
 	output, err := KubectlSh(command)
 
 	if strings.HasPrefix(command, "get") {
-		for index, line := range strings.Split(output, "\n") {
-			key := fmt.Sprintf("$%d", index)
-			Variables[key] = strings.Split(line, " ")[0]
-
+		variableIndex := 0
+		for _, line := range strings.Split(output, "\n") {
 			if strings.HasPrefix(line, "NAME ") {
 				fmt.Printf("   \t%s\n", line)
 			} else {
-				fmt.Printf("$%v \t%s\n", index, line)
+				variableIndex++
+				fmt.Printf("$%v \t%s\n", variableIndex, line)
 			}
+			key := fmt.Sprintf("$%d", variableIndex)
+			Variables[key] = strings.Split(line, " ")[0]
 		}
 	} else {
 		fmt.Println(output)
