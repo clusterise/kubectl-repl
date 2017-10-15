@@ -93,7 +93,7 @@ func repl() error {
 		return err
 	}
 
-	if strings.HasPrefix(command, "get") {
+	if err == nil && strings.HasPrefix(command, "get") {
 		variableIndex := 0
 		for _, line := range strings.Split(output, "\n") {
 			if strings.HasPrefix(line, "NAME ") {
