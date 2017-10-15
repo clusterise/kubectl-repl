@@ -6,6 +6,14 @@ Wrap `kubectl` with namespace and variables.
 [![asciicast](https://asciinema.org/a/142536.png)](https://asciinema.org/a/142536)
 
 
+Installation
+------------
+
+Download latest release for your platform from https://github.com/Mikulas/kubectl-repl/releases.
+
+Alternatively, download and build locally: see `Makefile` (`make build`). 
+
+
 Usage
 -----
 
@@ -17,11 +25,14 @@ Then you are in the main REPL mode. You are presented with a prompt, into which 
 
 The prompt can be exited with traditional *eof* or *sigint*, and an explicit `quit` or `exit` command.
 
+I recommend using [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`, such as
+`rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.   
+
 
 Shell integration
 -----------------
 
-Instead of directly invoking `kubectl` with prompt as arguments, `/bin/sh -c` is used instead. This
+Instead of directly invoking `kubectl` with prompt as arguments, `/bin/sh -c` is used. This
 allows for more complex usage usage as `grep` and redirects:
 
 ```console
@@ -38,7 +49,7 @@ Variables
 ---------
 
 Prompts starting with `get` return their output prefixed with `$n`. You may use those variables anywhere to
-automatically substitute for the value on first column of the respective line. For example:
+automatically substitute for the value of the first column of the respective line. For example:
 ```console
 # sentry get pods
 + kubectl -n sentry get pods
