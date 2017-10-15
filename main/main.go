@@ -23,7 +23,7 @@ func prompt(text string) (string, error) {
 	return strings.Trim(response, "\n"), nil
 }
 
-func pickNamespace() error {
+func namespaceSelector(selector func([]string)(string, error)) error {
 	namespaces, err := GetNamespaces()
 	if err != nil {
 		return err
@@ -31,11 +31,10 @@ func pickNamespace() error {
 
 	targets := make([]string, len(namespaces.Items))
 	for num, ns := range namespaces.Items {
-		fmt.Printf("$%d\t %s\n", num, ns.Name)
 		targets[num] = ns.Name
 	}
 
-	response, err := prompt("Select namespace:")
+	response, err := selector(targets)
 	if err != nil {
 		return err
 	}
@@ -43,18 +42,19 @@ func pickNamespace() error {
 	return nil
 }
 
-func switchNamespace(ns string) error {
-	namespaces, err := GetNamespaces()
-	if err != nil {
-		return err
-	}
+func pickNamespace() error {
+	return namespaceSelector(func(namespaces []string) (string, error) {
+		for _, ns := range namespaces {
+			fmt.Printf("%s\n", ns)
+		}
+		return prompt("Select namespace:")
+	})
+}
 
-	targets := make([]string, len(namespaces.Items))
-	for num, ns := range namespaces.Items {
-		targets[num] = ns.Name
-	}
-	Namespace = ClosestString(ns, targets)
-	return nil
+func switchNamespace(ns string) error {
+	return namespaceSelector(func(namespaces []string) (string, error) {
+		return ns, nil
+	})
 }
 
 func repl() error {
