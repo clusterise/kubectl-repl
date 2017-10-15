@@ -16,11 +16,15 @@ var (
 
 func prompt(text string) (string, error) {
 	fmt.Print(text + " ")
-	response, err := Input.ReadString('\n')
+	line, err := Input.ReadString('\n')
 	if err != nil {
 		return "", err
 	}
-	return strings.Trim(response, "\n"), nil
+	response := strings.Trim(line, "\n")
+	for from, to := range Variables {
+		response = strings.Replace(response, from, to, -1)
+	}
+	return response, nil
 }
 
 func namespaceSelector(selector func([]string)(string, error)) error {
@@ -44,8 +48,10 @@ func namespaceSelector(selector func([]string)(string, error)) error {
 
 func pickNamespace() error {
 	return namespaceSelector(func(namespaces []string) (string, error) {
-		for _, ns := range namespaces {
-			fmt.Printf("%s\n", ns)
+		for n, ns := range namespaces {
+			key := fmt.Sprintf("$%d", n)
+			Variables[key] = ns
+			fmt.Printf("%s \t%s\n", key, ns)
 		}
 		return prompt("Select namespace:")
 	})
@@ -61,10 +67,6 @@ func repl() error {
 	command, err := prompt(Namespace)
 	if err != nil {
 		return err
-	}
-
-	for from, to := range Variables {
-		command = strings.Replace(command, from, to, -1)
 	}
 
 	parts := strings.Split(command, " ")
