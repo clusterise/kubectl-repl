@@ -4,7 +4,8 @@ import (
 	"os/exec"
 )
 
-func Kubectl(args ...string) ([]byte, error) {
-	cmd := exec.Command("kubectl", args...)
-	return cmd.CombinedOutput()
+func KubectlSh(cmd string) (string, error) {
+	process := exec.Command("/bin/sh", "-c", "kubectl " + cmd)
+	bytes, err := process.CombinedOutput()
+	return string(bytes), err
 }
