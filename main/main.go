@@ -8,6 +8,7 @@ import (
 	"log"
 	"flag"
 	"github.com/fatih/color"
+	"io"
 )
 
 var (
@@ -107,22 +108,29 @@ func repl() error {
 	return err
 }
 
-func assert(v interface{}) {
-	if v != nil {
-		log.Fatal(v)
-	}
-}
-
 func main() {
 	flag.BoolVar(&Verbose, "verbose", false, "Verbose")
 	flag.Parse()
 
 	Variables = make(map[string]string)
 	Input = bufio.NewReader(os.Stdin)
-	assert(KubernetesSetup())
-	assert(pickNamespace())
+
+	err := KubernetesSetup()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = pickNamespace()
+	if err == io.EOF {
+		return
+	} else if err != nil {
+		log.Fatal(err)
+	}
 
 	for {
-		repl()
+		err = repl()
+		if err == io.EOF {
+			break
+		}
 	}
 }
