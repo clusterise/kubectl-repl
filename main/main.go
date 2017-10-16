@@ -74,6 +74,14 @@ func repl() error {
 		return err
 	}
 
+	if strings.HasPrefix(command, ";") {
+		output, err := sh(strings.TrimPrefix(command, ";"))
+		if output != "" {
+			fmt.Println(output)
+		}
+		return err
+	}
+
 	parts := strings.Split(command, " ")
 	if parts[0] == "exit" || parts[0] == "quit" {
 		os.Exit(0)

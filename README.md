@@ -48,6 +48,22 @@ $2 	app-deployment-314667899-xr47k       1/1       Running   0          22h
 ```
 
 
+Raw shell invocation is also supported by prefixing the command with `;`. This should be intuitive as it works in
+shell by default. Repl integration does not prefix the shell with `kubectl -n $NS` in this mode and trims the semicolon.
+Repl variables are available as in all other prompt modes. 
+
+```console
+# kube-system get pods
++ kubectl -n kube-system get pods
+   	NAME                        READY     STATUS    RESTARTS   AGE
+$1 	kube-dns-3945342221-mwdh6   3/3       Running   0          9d
+$2 	kube-dns-3945342221-x3fhn   3/3       Running   0          9d
+# kube-system ; echo $(whoami) $2
++  echo $(whoami) kube-dns-3945342221-x3fhn
+mikulas kube-dns-3945342221-x3fhn
+```
+
+
 Variables
 ---------
 
