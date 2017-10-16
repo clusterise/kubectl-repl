@@ -4,11 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/fatih/color"
+	"io"
 	"os"
 	"os/exec"
 	"os/signal"
 	"syscall"
-	"io"
 )
 
 func sh(shell string) error {
@@ -49,6 +49,7 @@ func shHandler(shell string, outputHandler func(string)) error {
 	cmd := exec.Command("/bin/sh", "-c", shell)
 
 	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
