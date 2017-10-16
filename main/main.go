@@ -75,11 +75,10 @@ func repl() error {
 	}
 
 	if strings.HasPrefix(command, ";") {
-		output, err := sh(strings.TrimPrefix(command, ";"))
-		if output != "" {
-			fmt.Println(output)
-		}
-		return err
+		shell := strings.TrimPrefix(command, ";")
+		return sh(shell, func(bytes string) {
+			fmt.Println(bytes)
+		})
 	}
 
 	parts := strings.Split(command, " ")
@@ -95,14 +94,9 @@ func repl() error {
 		return nil
 	}
 
-	output, err := kubectlSh(command)
-	if output == "" {
-		return err
-	}
-
 	if err == nil && strings.HasPrefix(command, "get") {
 		variableIndex := 0
-		for _, line := range strings.Split(output, "\n") {
+		return kubectlSh(command, func(line string) {
 			if strings.HasPrefix(line, "NAME ") {
 				fmt.Printf("   \t%s\n", line)
 			} else {
@@ -112,11 +106,13 @@ func repl() error {
 			}
 			key := fmt.Sprintf("%d", variableIndex)
 			variables[key] = strings.Split(line, " ")[0]
-		}
+		})
+
 	} else {
-		fmt.Println(output)
+		return kubectlSh(command, func(line string) {
+			fmt.Println(line)
+		})
 	}
-	return err
 }
 
 func main() {
