@@ -29,7 +29,9 @@ or any abbreviation that is closest. Additionally, you may use any of the variab
 Then you are in the main REPL mode. You are presented with a prompt, into which you enter `kubectl` commands
 (`kubectl -n $NS` prefix is implied).
 
-The prompt can be exited with traditional *eof* or *sigint*, and an explicit `quit` or `exit` command.
+The prompt can be exited with traditional *eof* or *sigint*, and an explicit `quit` or `exit` command. If a command
+spawned long living process (such as `--follow`, `--watch` or `exec`) it will terminate the processes first and return
+to repl.
 
 I recommend using [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`, such as
 `rlwrap kubectl-repl`. This adds prompt history, search, buffering etc. Docker container distribution contains rlwrap.
