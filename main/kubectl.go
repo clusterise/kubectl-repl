@@ -54,7 +54,19 @@ func shHandler(shell string, outputHandler func(string)) error {
 	}
 	reader := bufio.NewReader(stdout)
 
+	trap := make(chan os.Signal, 1)
+	signal.Notify(trap, syscall.SIGINT)
+	defer close(trap)
+	defer signal.Stop(trap)
+
 	cmd.Start()
+	go func() {
+		_, ok := <-trap
+		if ok {
+			cmd.Process.Kill()
+		}
+	}()
+
 	for {
 		line, _, err := reader.ReadLine()
 		if err != nil {
