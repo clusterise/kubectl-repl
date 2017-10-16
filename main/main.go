@@ -31,45 +31,9 @@ func prompt(text string) (string, error) {
 	return substituteForVars(response), nil
 }
 
-func namespaceSelector(selector func([]string) (string, error)) error {
-	namespaces, err := getNamespaces()
-	if err != nil {
-		return err
-	}
-
-	targets := make([]string, len(namespaces.Items))
-	for num, ns := range namespaces.Items {
-		targets[num] = ns.Name
-	}
-
-	response, err := selector(targets)
-	if err != nil {
-		return err
-	}
-	namespace = closestString(response, targets)
-	return nil
-}
-
 func printIndexedLine(index, line string) {
 	coloredIndex := color.New(color.FgBlue).Sprintf("$%s", index)
 	fmt.Printf("%s \t%s\n", coloredIndex, line)
-}
-
-func pickNamespace() error {
-	return namespaceSelector(func(namespaces []string) (string, error) {
-		for n, ns := range namespaces {
-			key := fmt.Sprintf("%d", n)
-			variables[key] = ns
-			printIndexedLine(key, ns)
-		}
-		return prompt("# namespace")
-	})
-}
-
-func switchNamespace(ns string) error {
-	return namespaceSelector(func(namespaces []string) (string, error) {
-		return ns, nil
-	})
 }
 
 func repl() error {
@@ -78,22 +42,10 @@ func repl() error {
 		return err
 	}
 
-	if strings.HasPrefix(command, ";") {
-		shell := strings.TrimPrefix(command, ";")
-		return sh(shell)
-	}
-
-	parts := strings.Split(command, " ")
-	if parts[0] == "exit" || parts[0] == "quit" {
-		os.Exit(0)
-	}
-	if parts[0] == "namespace" || parts[0] == "ns" {
-		if len(parts) > 1 {
-			switchNamespace(parts[1])
-		} else {
-			pickNamespace()
+	for _, builtin := range commands {
+		if builtin.filter(command) {
+			return builtin.run(command)
 		}
-		return nil
 	}
 
 	if err == nil && strings.HasPrefix(command, "get") {
