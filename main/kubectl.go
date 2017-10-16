@@ -33,6 +33,7 @@ func sh(shell string) error {
 	go func() {
 		_, ok := <-trap
 		if ok {
+			fmt.Println("^C")
 			cmd.Process.Kill()
 		}
 	}()
@@ -63,6 +64,7 @@ func shHandler(shell string, outputHandler func(string)) error {
 	go func() {
 		_, ok := <-trap
 		if ok {
+			fmt.Println("^C")
 			cmd.Process.Kill()
 		}
 	}()
