@@ -12,14 +12,14 @@ Wrap `kubectl` with namespace and variables.
 Installation
 ------------
 
-Download latest release for your platform from https://github.com/Mikulas/kubectl-repl/releases.
+**Download** latest release for your platform from https://github.com/Mikulas/kubectl-repl/releases.
 It's recommended to use [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`,
 such as `rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.
 
-Docker container is available at https://hub.docker.com/r/mikulas/kubectl-repl/. Requires volume mount into `/root/.kops`,
-for example `-v ~/.kops:/root/.kops`. Container already includes rlwrap.
+**Docker** container with prebuilt binary can be downloaded with `docker pull mikulas/kubectl-repl` ([Docker Hub](https://hub.docker.com/r/mikulas/kubectl-repl/)).
+Requires volume mount into `/root/.kops`, for example `-v ~/.kops:/root/.kops`. Container already includes rlwrap.
 
-Alternatively, download and build locally: see `Makefile` (`make build`). 
+Alternatively, download and **build locally**: see `Makefile` (`make build`). 
 
 
 Usage
