@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"syscall"
+	"io"
 )
 
 func sh(shell string) error {
@@ -72,11 +73,13 @@ func shHandler(shell string, outputHandler func(string)) error {
 	for {
 		line, _, err := reader.ReadLine()
 		if err != nil {
+			if err != io.EOF {
+				return err
+			}
 			return cmd.Wait()
 		}
 		outputHandler(string(line))
 	}
-	return cmd.Wait()
 }
 
 func kubectl(cmd string) string {
