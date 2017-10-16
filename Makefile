@@ -1,7 +1,10 @@
 GOFILES = main/*.go
 VERSION ?= master
+REPO = mikulas/kubectl-repl
 
-build: ${GOFILES}
+build: ${GOFILES} kubectl-repl
+
+kubectl-repl: ${GOFILES}
 	cd main && go get -t ./... && go install
 	go build -o kubectl-repl ${GOFILES}
 
@@ -15,3 +18,8 @@ test:
 
 release:
 	bash release.sh ${VERSION}
+
+docker:
+	cd docker && docker build -t ${REPO}:${VERSION} .
+
+.PHONY: docker preflight

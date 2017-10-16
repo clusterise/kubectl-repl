@@ -14,6 +14,9 @@ Installation
 
 Download latest release for your platform from https://github.com/Mikulas/kubectl-repl/releases.
 
+Docker container is available at https://hub.docker.com/r/mikulas/kubectl-repl/. Requires volume mount into `/root/.kops`,
+for example `-v ~/.kops:/root/.kops`.
+
 Alternatively, download and build locally: see `Makefile` (`make build`). 
 
 
