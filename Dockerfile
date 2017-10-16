@@ -1,12 +1,10 @@
 FROM golang:1.9-alpine3.6 as build
 
 WORKDIR /go/src/github.com/Mikulas/kubectl-repl
+ADD . /go/src/github.com/Mikulas/kubectl-repl/
 RUN apk update && \
     apk add --no-cache \
-        ca-certificates git make wget && \
-    wget "https://github.com/Mikulas/kubectl-repl/archive/master.zip" && \
-    unzip master.zip && \
-    mv kubectl-repl-master/* . && \
+        ca-certificates git make && \
     make build
 
 

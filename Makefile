@@ -20,6 +20,6 @@ release:
 	bash release.sh ${VERSION}
 
 docker:
-	cd docker && docker build -t ${REPO}:${VERSION} .
+	docker build -t ${REPO}:${VERSION} .
 
 .PHONY: docker preflight
