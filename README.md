@@ -6,7 +6,7 @@ Kubectl REPL
 
 Wrap `kubectl` with namespace and variables.
 
-[![asciicast](https://s3.eu-central-1.amazonaws.com/uploads.mangoweb.org/kubectl-repl.png)](https://asciinema.org/a/142536)
+[![asciicast](https://s3.eu-central-1.amazonaws.com/uploads.mangoweb.org/kubectl-repl-2.png)](https://asciinema.org/a/142536)
 
 
 Installation
@@ -32,7 +32,7 @@ Then you are in the main REPL mode. You are presented with a prompt, into which 
 The prompt can be exited with traditional *eof* or *sigint*, and an explicit `quit` or `exit` command.
 
 I recommend using [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`, such as
-`rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.
+`rlwrap kubectl-repl`. This adds prompt history, search, buffering etc. Docker container distribution contains rlwrap.
 
 
 Shell integration
