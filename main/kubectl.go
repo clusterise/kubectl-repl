@@ -7,10 +7,10 @@ import (
 	"strings"
 )
 
-func KubectlSh(cmd string) (string, error) {
-	shell := fmt.Sprintf("kubectl -n %s %s", Namespace, cmd)
+func kubectlSh(cmd string) (string, error) {
+	shell := fmt.Sprintf("kubectl -n %s %s", namespace, cmd)
 
-	if Verbose {
+	if verbose {
 		color.Yellow(fmt.Sprintf("+ %s\n", shell))
 	}
 	process := exec.Command("/bin/sh", "-c", shell)

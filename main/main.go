@@ -12,23 +12,23 @@ import (
 )
 
 var (
-	Input     *bufio.Reader
-	Namespace string
-	Verbose   bool
+	input     *bufio.Reader
+	namespace string
+	verbose   bool
 )
 
 func prompt(text string) (string, error) {
 	fmt.Print(color.New(color.Bold).Sprintf(text + " "))
-	line, err := Input.ReadString('\n')
+	line, err := input.ReadString('\n')
 	if err != nil {
 		return "", err
 	}
 	response := strings.Trim(line, "\n")
-	return SubstituteForVars(response), nil
+	return substituteForVars(response), nil
 }
 
 func namespaceSelector(selector func([]string) (string, error)) error {
-	namespaces, err := GetNamespaces()
+	namespaces, err := getNamespaces()
 	if err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func namespaceSelector(selector func([]string) (string, error)) error {
 	if err != nil {
 		return err
 	}
-	Namespace = ClosestString(response, targets)
+	namespace = closestString(response, targets)
 	return nil
 }
 
@@ -55,7 +55,7 @@ func pickNamespace() error {
 	return namespaceSelector(func(namespaces []string) (string, error) {
 		for n, ns := range namespaces {
 			key := fmt.Sprintf("%d", n)
-			Variables[key] = ns
+			variables[key] = ns
 			printIndexedLine(key, ns)
 		}
 		return prompt("# namespace")
@@ -69,7 +69,7 @@ func switchNamespace(ns string) error {
 }
 
 func repl() error {
-	command, err := prompt("# " + Namespace)
+	command, err := prompt("# " + namespace)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func repl() error {
 		return nil
 	}
 
-	output, err := KubectlSh(command)
+	output, err := kubectlSh(command)
 	if output == "" {
 		return err
 	}
@@ -103,7 +103,7 @@ func repl() error {
 				printIndexedLine(key, line)
 			}
 			key := fmt.Sprintf("%d", variableIndex)
-			Variables[key] = strings.Split(line, " ")[0]
+			variables[key] = strings.Split(line, " ")[0]
 		}
 	} else {
 		fmt.Println(output)
@@ -112,13 +112,13 @@ func repl() error {
 }
 
 func main() {
-	flag.BoolVar(&Verbose, "verbose", false, "Verbose")
+	flag.BoolVar(&verbose, "verbose", false, "Verbose")
 	flag.Parse()
 
-	Variables = make(map[string]string)
-	Input = bufio.NewReader(os.Stdin)
+	variables = make(map[string]string)
+	input = bufio.NewReader(os.Stdin)
 
-	err := KubernetesSetup()
+	err := kubernetesSetup()
 	if err != nil {
 		log.Fatal(err)
 	}

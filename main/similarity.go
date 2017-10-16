@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-func ClosestString(value string, targets []string) string {
+func closestString(value string, targets []string) string {
 	valueRunes := []rune(value)
 	ops := levenshtein.Options{
 		InsCost: 0,

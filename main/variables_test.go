@@ -6,11 +6,11 @@ import (
 )
 
 func TestSubstitution(t *testing.T) {
-	Variables = map[string]string{
+	variables = map[string]string{
 		"a":   "alpha",
 		"aaa": "triple",
 	}
-	assert.Equal(t, "pre alpha post", SubstituteForVars("pre $a post"))
-	assert.Equal(t, "alphaalphaalpha", SubstituteForVars("$a$a$a"))
-	assert.Equal(t, "triple", SubstituteForVars("$aaa"))
+	assert.Equal(t, "pre alpha post", substituteForVars("pre $a post"))
+	assert.Equal(t, "alphaalphaalpha", substituteForVars("$a$a$a"))
+	assert.Equal(t, "triple", substituteForVars("$aaa"))
 }

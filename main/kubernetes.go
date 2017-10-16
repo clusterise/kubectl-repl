@@ -20,7 +20,7 @@ func homeDir() string {
 	return os.Getenv("USERPROFILE") // windows
 }
 
-func KubernetesSetup() error {
+func kubernetesSetup() error {
 	kubeconfig := filepath.Join(homeDir(), ".kube", "config")
 	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 	if err != nil {
@@ -31,6 +31,6 @@ func KubernetesSetup() error {
 	return err
 }
 
-func GetNamespaces() (*v1.NamespaceList, error) {
+func getNamespaces() (*v1.NamespaceList, error) {
 	return clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
 }
