@@ -4,6 +4,7 @@ var commands = []builtin{
 	builtinExit{},
 	builtinNamespace{},
 	builtinShell{},
+	builtinGet{},
 }
 
 type builtin interface {

@@ -48,23 +48,7 @@ func repl() error {
 		}
 	}
 
-	if err == nil && strings.HasPrefix(command, "get") {
-		variableIndex := 0
-		return shHandler(kubectl(command), func(line string) {
-			if strings.HasPrefix(line, "NAME ") {
-				fmt.Printf("   \t%s\n", line)
-			} else {
-				variableIndex++
-				key := fmt.Sprintf("%d", variableIndex)
-				printIndexedLine(key, line)
-			}
-			key := fmt.Sprintf("%d", variableIndex)
-			variables[key] = strings.Split(line, " ")[0]
-		})
-
-	} else {
-		return sh(kubectl(command))
-	}
+	return sh(kubectl(command))
 }
 
 func main() {
