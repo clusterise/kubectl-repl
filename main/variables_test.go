@@ -1,13 +1,13 @@
 package main
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestSubstitution(t *testing.T) {
 	Variables = map[string]string{
-		"a": "alpha",
+		"a":   "alpha",
 		"aaa": "triple",
 	}
 	assert.Equal(t, "pre alpha post", SubstituteForVars("pre $a post"))

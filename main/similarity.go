@@ -21,8 +21,8 @@ func ClosestString(value string, targets []string) string {
 
 	best := struct {
 		Distance int
-		Value string
-	}{math.MaxInt16,""}
+		Value    string
+	}{math.MaxInt16, ""}
 	for target, distance := range distances {
 		if distance < best.Distance {
 			best.Distance = distance

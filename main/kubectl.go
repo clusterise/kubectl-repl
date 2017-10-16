@@ -1,10 +1,10 @@
 package main
 
 import (
-	"os/exec"
-	"strings"
 	"fmt"
 	"github.com/fatih/color"
+	"os/exec"
+	"strings"
 )
 
 func KubectlSh(cmd string) (string, error) {

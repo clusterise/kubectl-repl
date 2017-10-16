@@ -6,7 +6,7 @@ import (
 
 var (
 	Variables map[string]string
-	pattern *regexp.Regexp
+	pattern   *regexp.Regexp
 )
 
 func SubstituteForVars(text string) string {

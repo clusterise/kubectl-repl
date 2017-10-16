@@ -2,19 +2,19 @@ package main
 
 import (
 	"bufio"
-	"os"
-	"fmt"
-	"strings"
-	"log"
 	"flag"
+	"fmt"
 	"github.com/fatih/color"
 	"io"
+	"log"
+	"os"
+	"strings"
 )
 
 var (
-	Input *bufio.Reader
+	Input     *bufio.Reader
 	Namespace string
-	Verbose bool
+	Verbose   bool
 )
 
 func prompt(text string) (string, error) {
@@ -27,7 +27,7 @@ func prompt(text string) (string, error) {
 	return SubstituteForVars(response), nil
 }
 
-func namespaceSelector(selector func([]string)(string, error)) error {
+func namespaceSelector(selector func([]string) (string, error)) error {
 	namespaces, err := GetNamespaces()
 	if err != nil {
 		return err
