@@ -90,3 +90,9 @@ $ env TYPE=pod rlwrap ./kubectl-repl -verbose
 # default get $TYPE
 + kubectl -n default get $TYPE
 ```
+
+
+Alternatives
+------------
+
+- https://github.com/c-bata/kube-prompt
