@@ -6,7 +6,7 @@ Kubectl REPL
 
 Wrap `kubectl` with namespace and variables.
 
-[![asciicast](https://asciinema.org/a/142536.png)](https://asciinema.org/a/142536)
+[![asciicast](https://s3.eu-central-1.amazonaws.com/uploads.mangoweb.org/kubectl-repl.png)](https://asciinema.org/a/142536)
 
 
 Installation
