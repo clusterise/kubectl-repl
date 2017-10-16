@@ -6,7 +6,9 @@ build: ${GOFILES} kubectl-repl
 
 kubectl-repl: ${GOFILES}
 	cd main && go get -t ./... && go install
+	sed -i.bak "s/{{{VERSION}}}/${VERSION}/" main/main.go
 	go build -o kubectl-repl ${GOFILES}
+	mv main/main.go.bak main/main.go
 
 preflight: format test
 
@@ -17,7 +19,9 @@ test:
 	go test ${GOFILES}
 
 release:
+	sed -i.bak "s/{{{VERSION}}}/${VERSION}/" main/main.go
 	bash release.sh ${VERSION}
+	mv main/main.go.bak main/main.go
 
 docker:
 	docker build -t ${REPO}:${VERSION} .

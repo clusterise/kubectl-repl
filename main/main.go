@@ -11,6 +11,10 @@ import (
 	"strings"
 )
 
+const (
+	versionString = "kubectl-repl {{{VERSION}}}"
+)
+
 var (
 	input     *bufio.Reader
 	namespace string
@@ -112,8 +116,15 @@ func repl() error {
 }
 
 func main() {
+	var version bool
 	flag.BoolVar(&verbose, "verbose", false, "Verbose")
+	flag.BoolVar(&version, "version", false, "Print current version")
 	flag.Parse()
+
+	if version {
+		fmt.Println(versionString)
+		return
+	}
 
 	variables = make(map[string]string)
 	input = bufio.NewReader(os.Stdin)
