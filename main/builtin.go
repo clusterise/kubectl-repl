@@ -3,6 +3,7 @@ package main
 var commands = []builtin{
 	builtinExit{},
 	builtinNamespace{},
+	builtinShell{},
 }
 
 type builtin interface {
