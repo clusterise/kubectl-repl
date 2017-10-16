@@ -26,6 +26,10 @@ func sh(shell string) error {
 	defer signal.Stop(trap)
 
 	err := cmd.Start()
+	if err != nil {
+		return err
+	}
+
 	go func() {
 		_, ok := <-trap
 		if ok {
@@ -33,9 +37,6 @@ func sh(shell string) error {
 		}
 	}()
 
-	if err != nil {
-		return err
-	}
 	return cmd.Wait()
 }
 
