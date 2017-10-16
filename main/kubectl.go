@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/fatih/color"
-	"os/exec"
 	"os"
-	"bufio"
+	"os/exec"
+	"os/signal"
+	"syscall"
 )
 
 func sh(shell string) error {
@@ -18,11 +20,23 @@ func sh(shell string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-  	err := cmd.Start()
-  	if err != nil {
-  		return err
+	trap := make(chan os.Signal, 1)
+	signal.Notify(trap, syscall.SIGINT)
+	defer close(trap)
+	defer signal.Stop(trap)
+
+	err := cmd.Start()
+	go func() {
+		_, ok := <-trap
+		if ok {
+			cmd.Process.Kill()
+		}
+	}()
+
+	if err != nil {
+		return err
 	}
-  	return cmd.Wait()
+	return cmd.Wait()
 }
 
 func shHandler(shell string, outputHandler func(string)) error {
@@ -34,20 +48,20 @@ func shHandler(shell string, outputHandler func(string)) error {
 	cmd.Stdin = os.Stdin
 
 	stdout, err := cmd.StdoutPipe()
-  	if err != nil {
-  		return err
-  	}
-    reader := bufio.NewReader(stdout)
+	if err != nil {
+		return err
+	}
+	reader := bufio.NewReader(stdout)
 
-  	cmd.Start()
-  	for {
-  		line, _, err := reader.ReadLine()
-        if err != nil {
-            return cmd.Wait()
-        }
-        outputHandler(string(line))
-    }
-  	return cmd.Wait()
+	cmd.Start()
+	for {
+		line, _, err := reader.ReadLine()
+		if err != nil {
+			return cmd.Wait()
+		}
+		outputHandler(string(line))
+	}
+	return cmd.Wait()
 }
 
 func kubectl(cmd string) string {
