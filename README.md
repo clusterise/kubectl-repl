@@ -13,9 +13,11 @@ Installation
 ------------
 
 Download latest release for your platform from https://github.com/Mikulas/kubectl-repl/releases.
+It's recommended to use [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`,
+such as `rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.
 
 Docker container is available at https://hub.docker.com/r/mikulas/kubectl-repl/. Requires volume mount into `/root/.kops`,
-for example `-v ~/.kops:/root/.kops`.
+for example `-v ~/.kops:/root/.kops`. Container already includes rlwrap.
 
 Alternatively, download and build locally: see `Makefile` (`make build`). 
 
@@ -24,17 +26,17 @@ Usage
 -----
 
 `./kubectl-repl` first starts by asking you for namespace. You may enter any of the strings verbatim,
-or any abbreviation that is closest. Additionally, you may use any of the variables REPL assigned (`$2`).
+or any abbreviation that is closest. You may also use any of the variables REPL assigned (`$2`).
 
 Then you are in the main REPL mode. You are presented with a prompt, into which you enter `kubectl` commands
 (`kubectl -n $NS` prefix is implied).
 
-The prompt can be exited with traditional *eof* or *sigint*, and an explicit `quit` or `exit` command. If a command
-spawned long living process (such as `--follow`, `--watch` or `exec`) it will terminate the processes first and return
-to repl.
+Namespace can be changed by calling `namespace` or `ns` repl builtin, optionally with namespace abbreviation
+to change to: `ns $pattern`.
 
-I recommend using [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`, such as
-`rlwrap kubectl-repl`. This adds prompt history, search, buffering etc. Docker container distribution contains rlwrap.
+The prompt can be exited with traditional *eof* `^D` or *sigint* `^C`, and an explicit `quit` or `exit` builtin command.
+If a command spawned long living process (such as `--follow`, `--watch` or `exec`), *sigint* will terminate the processes
+first and return to repl.
 
 
 Shell integration
