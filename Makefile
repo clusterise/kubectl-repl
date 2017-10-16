@@ -2,7 +2,7 @@ GOFILES = main/*.go
 VERSION ?= master
 
 build: ${GOFILES}
-	cd main && go install
+	cd main && go get -t ./... && go install
 	go build -o kubectl-repl ${GOFILES}
 
 preflight: format test

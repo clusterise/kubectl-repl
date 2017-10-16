@@ -1,6 +1,9 @@
 Kubectl REPL
 ============
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/mikulas/kubectl-repl)](https://goreportcard.com/report/github.com/mikulas/kubectl-repl)
+[![Build Status](https://travis-ci.org/Mikulas/kubectl-repl.svg?branch=master)](https://travis-ci.org/Mikulas/kubectl-repl)
+
 Wrap `kubectl` with namespace and variables.
 
 [![asciicast](https://asciinema.org/a/142536.png)](https://asciinema.org/a/142536)
