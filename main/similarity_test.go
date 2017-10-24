@@ -11,4 +11,10 @@ func TestClosestString(t *testing.T) {
 
 	assert.Equal(t, "alpha", closestString("aXpha", []string{"aX", "alpha"}),
 		"should correct typos")
+
+	assert.Equal(t, "alpha", closestString("alph", []string{"alpha", "alphafoo"}),
+		"should prefer shorter prefix match")
+
+	assert.Equal(t, "alpha", closestString("alpha", []string{"alpha", "alphafoo"}),
+		"should prefer exact match to prefix")
 }
