@@ -16,7 +16,7 @@ RUN echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/reposito
     apk add 'readline@edge' && \
     apk add 'rlwrap@testing'
 
-VOLUME ["/root/.kops"]
+VOLUME ["/root/.kube"]
 
 COPY --from=build /go/src/github.com/Mikulas/kubectl-repl/kubectl-repl /usr/bin/kubectl-repl
 WORKDIR /root

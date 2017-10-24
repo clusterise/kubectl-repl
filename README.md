@@ -17,7 +17,7 @@ It's recommended to use [rlwrap](https://github.com/hanslub42/rlwrap) in combina
 such as `rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.
 
 **Docker** container with prebuilt binary can be downloaded with `docker pull mikulas/kubectl-repl` ([Docker Hub](https://hub.docker.com/r/mikulas/kubectl-repl/)).
-Requires volume mount into `/root/.kops`, for example `-v ~/.kops:/root/.kops`. Container already includes rlwrap.
+Requires volume mount into `/root/.kube`, for example `-v ~/.kube:/root/.kube`. Container already includes rlwrap.
 
 Alternatively, download and **build locally**: see `Makefile` (`make build`). 
 
