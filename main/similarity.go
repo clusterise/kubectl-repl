@@ -8,7 +8,7 @@ import (
 func closestString(value string, targets []string) string {
 	valueRunes := []rune(value)
 	ops := levenshtein.Options{
-		InsCost: 0,
+		InsCost: 1,
 		SubCost: 5,
 		DelCost: 10,
 		Matches: levenshtein.DefaultOptions.Matches,
