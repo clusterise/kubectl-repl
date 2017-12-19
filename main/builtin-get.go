@@ -3,13 +3,22 @@ package main
 import (
 	"fmt"
 	"strings"
+	"regexp"
+)
+
+var (
+	outputRegexp *regexp.Regexp
 )
 
 type builtinGet struct{}
 
 // Apply to all "get" commands, ignoring flags
 func (b builtinGet) filter(command string) bool {
-	return strings.HasPrefix(command, "get")
+	if outputRegexp == nil {
+		outputRegexp, _ = regexp.Compile(`^([^|]*)(-o|--output)(\s*=\s*|\s+)(json|yaml)`)
+	}
+
+	return strings.HasPrefix(command, "get") && !outputRegexp.MatchString(command)
 }
 
 func (b builtinGet) run(command string) error {
