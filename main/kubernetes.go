@@ -7,6 +7,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var (
@@ -21,8 +22,25 @@ func homeDir() string {
 }
 
 func kubernetesSetup() error {
-	kubeconfig := filepath.Join(homeDir(), ".kube", "config")
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+	configEnv := strings.Split(os.Getenv("KUBECONFIG"), ":")
+
+	var kubeconfig string
+	if len(configEnv) > 0 && configEnv[0] != "" {
+		kubeconfig = configEnv[0]
+	} else {
+		kubeconfig = filepath.Join(homeDir(), ".kube", "config")
+	}
+
+	var overrides clientcmd.ConfigOverrides
+	if len(configEnv) > 1 && configEnv[1] != "" {
+		overrides.CurrentContext = configEnv[1]
+	}
+
+	config, err := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
+		&clientcmd.ClientConfigLoadingRules{ExplicitPath: kubeconfig},
+		&overrides,
+	).ClientConfig()
+
 	if err != nil {
 		return err
 	}
