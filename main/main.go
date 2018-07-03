@@ -18,6 +18,7 @@ const (
 var (
 	input     *bufio.Reader
 	namespace string
+	context   string
 	verbose   bool
 )
 
@@ -55,6 +56,7 @@ func main() {
 	var version bool
 	flag.BoolVar(&verbose, "verbose", false, "Verbose")
 	flag.BoolVar(&version, "version", false, "Print current version")
+	flag.StringVar(&context, "context", "", "Override current context")
 	flag.Parse()
 
 	if version {

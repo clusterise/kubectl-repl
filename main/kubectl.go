@@ -86,6 +86,10 @@ func shHandler(shell string, outputHandler func(string)) error {
 
 func kubectl(cmd string) string {
 	buffer := bytes.NewBufferString("kubectl")
+	if context != "" {
+		buffer.WriteString(" --context=")
+		buffer.WriteString(context)
+	}
 	if namespace != "" {
 		buffer.WriteString(" --namespace=")
 		buffer.WriteString(namespace)
