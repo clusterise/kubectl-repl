@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"syscall"
+	"bytes"
 )
 
 func sh(shell string) error {
@@ -84,5 +85,12 @@ func shHandler(shell string, outputHandler func(string)) error {
 }
 
 func kubectl(cmd string) string {
-	return fmt.Sprintf("kubectl -n %s %s", namespace, cmd)
+	buffer := bytes.NewBufferString("kubectl")
+	if namespace != "" {
+		buffer.WriteString(" --namespace=")
+		buffer.WriteString(namespace)
+	}
+	buffer.WriteString(" ")
+	buffer.WriteString(cmd)
+	return buffer.String()
 }

@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"strings"
+	"encoding/json"
+	"os/exec"
 )
 
 type builtinNamespace struct{}
@@ -20,15 +22,31 @@ func (b builtinNamespace) run(command string) error {
 	return pickNamespace()
 }
 
+type KubernetesV1NamespaceList struct {
+	Items []KubernetesV1Namespace `json:"items"`
+}
+type KubernetesV1Namespace struct {
+	Metadata struct {
+		Name string `json:"name"`
+	} `json:"metadata"`
+}
+
 func namespaceSelector(selector func([]string) (string, error)) error {
-	namespaces, err := getNamespaces()
+	cmd := exec.Command("/bin/sh", "-c", kubectl("get namespaces --output=json"))
+	jsonOut, err := cmd.Output()
+	if err != nil {
+		return err
+	}
+
+	var namespaces KubernetesV1NamespaceList
+	err = json.Unmarshal(jsonOut, &namespaces)
 	if err != nil {
 		return err
 	}
 
 	targets := make([]string, len(namespaces.Items))
 	for num, ns := range namespaces.Items {
-		targets[num] = ns.Name
+		targets[num] = ns.Metadata.Name
 	}
 
 	response, err := selector(targets)

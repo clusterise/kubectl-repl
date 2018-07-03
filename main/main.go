@@ -65,12 +65,7 @@ func main() {
 	variables = make(map[string]string)
 	input = bufio.NewReader(os.Stdin)
 
-	err := kubernetesSetup()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	err = pickNamespace()
+	err := pickNamespace()
 	if err == io.EOF {
 		return
 	} else if err != nil {
