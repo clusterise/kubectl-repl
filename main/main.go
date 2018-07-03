@@ -22,8 +22,21 @@ var (
 	verbose   bool
 )
 
-func prompt(text string) (string, error) {
-	fmt.Print(color.New(color.Bold).Sprintf(text + " "))
+func prompt() (string, error) {
+	color.New(color.Bold).Print("# ")
+
+	if context != "" {
+		color.New(color.FgBlack, color.Italic).Print(context)
+		fmt.Print(" ")
+	}
+
+	if namespace != "" {
+		color.New(color.Bold).Print(namespace)
+	} else {
+		color.New(color.Bold).Print("namespace")
+	}
+	fmt.Print(" ")
+
 	line, err := input.ReadString('\n')
 	if err != nil {
 		return "", err
@@ -38,7 +51,7 @@ func printIndexedLine(index, line string) {
 }
 
 func repl() error {
-	command, err := prompt("# " + namespace)
+	command, err := prompt()
 	if err != nil {
 		return err
 	}

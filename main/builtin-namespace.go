@@ -64,7 +64,7 @@ func pickNamespace() error {
 			variables[key] = ns
 			printIndexedLine(key, ns)
 		}
-		return prompt("# namespace")
+		return prompt()
 	})
 }
 
