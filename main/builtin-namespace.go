@@ -5,6 +5,7 @@ import (
 	"strings"
 	"encoding/json"
 	"os/exec"
+	"bytes"
 )
 
 type builtinNamespace struct{}
@@ -33,13 +34,18 @@ type KubernetesV1Namespace struct {
 
 func namespaceSelector(selector func([]string) (string, error)) error {
 	cmd := exec.Command("/bin/sh", "-c", kubectl("get namespaces --output=json"))
-	jsonOut, err := cmd.Output()
+	var jsonOut bytes.Buffer
+	var cmdErr bytes.Buffer
+	cmd.Stdout = &jsonOut
+	cmd.Stderr = &cmdErr
+
+	err := cmd.Run()
 	if err != nil {
-		return err
+		return fmt.Errorf("%v: %v", err, cmdErr.String())
 	}
 
 	var namespaces KubernetesV1NamespaceList
-	err = json.Unmarshal(jsonOut, &namespaces)
+	err = json.Unmarshal(jsonOut.Bytes(), &namespaces)
 	if err != nil {
 		return err
 	}
