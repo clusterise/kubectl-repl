@@ -18,7 +18,8 @@ func (b builtinGet) filter(command string) bool {
 		outputRegexp, _ = regexp.Compile(`^([^|]*)(-o|--output)(\s*=\s*|\s+)(json|yaml)`)
 	}
 
-	return strings.HasPrefix(command, "get") && !outputRegexp.MatchString(command)
+	return strings.HasPrefix(command, "get") && !outputRegexp.MatchString(command) &&
+		!strings.Contains(command, " --help")
 }
 
 func (b builtinGet) run(command string) error {
