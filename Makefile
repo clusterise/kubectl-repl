@@ -25,6 +25,6 @@ release:
 
 docker:
 	rm kubectl-repl || true
-	docker build -t ${REPO}:${VERSION} .
+	docker build --build-arg VERSION=${VERSION} -t ${REPO}:${VERSION} .
 
 .PHONY: docker preflight

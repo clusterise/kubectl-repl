@@ -1,11 +1,13 @@
 FROM golang:1.10-alpine3.7 as build
 
+ARG VERSION
+
 WORKDIR /go/src/github.com/Mikulas/kubectl-repl
 ADD . /go/src/github.com/Mikulas/kubectl-repl/
 RUN apk update && \
     apk add --no-cache \
         ca-certificates curl git make && \
-    make build && \
+    make build VERSION=$VERSION && \
     curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
     chmod +x ./kubectl
 
