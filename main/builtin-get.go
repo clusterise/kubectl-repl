@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	splitRegexp *regexp.Regexp
 	outputRegexp *regexp.Regexp
 )
 
@@ -14,6 +15,10 @@ type builtinGet struct{}
 
 func (b builtinGet) init() error {
 	var err error
+	splitRegexp, err = regexp.Compile(`\s+`)
+	if err != nil {
+		return err
+	}
 	outputRegexp, err = regexp.Compile(`^([^|]*)(-o|--output)(\s*=\s*|\s+)(json|yaml)`)
 	return err
 }
@@ -35,6 +40,6 @@ func (b builtinGet) run(command string) error {
 			printIndexedLine(key, line)
 		}
 		key := fmt.Sprintf("%d", variableIndex)
-		variables[key] = strings.Split(line, " ")[0]
+		variables[key] = splitRegexp.Split(line, -1)[0]
 	})
 }
