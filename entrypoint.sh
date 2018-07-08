@@ -6,7 +6,7 @@ if [[ ! -f "$CONFIG" ]]; then
     echo "$CONFIG not found"
     echo "You most likely did not mount your homedir,"
     echo "start this container with volume:"
-    echo "    -v \$HOME/.kube:/root/.kube "
+    echo "    -v \$HOME/.kube:/root/.kube:ro "
     exit 1
 fi
 
