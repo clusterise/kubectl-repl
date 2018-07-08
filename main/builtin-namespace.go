@@ -66,7 +66,7 @@ func namespaceSelector(selector func([]string) (string, error)) error {
 func pickNamespace() error {
 	return namespaceSelector(func(namespaces []string) (string, error) {
 		for n, ns := range namespaces {
-			key := fmt.Sprintf("%d", n)
+			key := fmt.Sprintf("%d", n + 1)
 			variables[key] = ns
 			printIndexedLine(key, ns)
 		}
