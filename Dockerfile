@@ -1,4 +1,4 @@
-FROM golang:1.9-alpine3.6 as build
+FROM golang:1.10-alpine3.7 as build
 
 WORKDIR /go/src/github.com/Mikulas/kubectl-repl
 ADD . /go/src/github.com/Mikulas/kubectl-repl/
@@ -10,7 +10,7 @@ RUN apk update && \
     chmod +x ./kubectl
 
 
-FROM alpine:3.6
+FROM alpine:3.7
 
 RUN echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
