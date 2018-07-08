@@ -24,6 +24,7 @@ release:
 	mv main/main.go.bak main/main.go
 
 docker:
+	rm kubectl-repl || true
 	docker build -t ${REPO}:${VERSION} .
 
 .PHONY: docker preflight

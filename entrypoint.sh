@@ -13,4 +13,9 @@ fi
 # workaround for rlwrap width=0 https://gitlab.com/perl6/docker/issues/1
 sleep 0.1
 
-rlwrap kubectl-repl -verbose
+rlwrap \
+    --ansi-colour-aware \
+    --case-insensitive \
+    --history-no-dupes 1 \
+    --file "/opt/kubectl.dic" \
+    kubectl-repl "$@"

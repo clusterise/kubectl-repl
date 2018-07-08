@@ -21,6 +21,7 @@ VOLUME ["/root/.kube"]
 
 COPY --from=build /go/src/github.com/Mikulas/kubectl-repl/kubectl /usr/bin/kubectl
 COPY --from=build /go/src/github.com/Mikulas/kubectl-repl/kubectl-repl /usr/bin/kubectl-repl
+COPY ./autocomplete.dic /opt/kubectl.dic
 WORKDIR /root
 ADD entrypoint.sh .
 ENTRYPOINT ["sh", "entrypoint.sh"]
