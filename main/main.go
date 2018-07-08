@@ -50,7 +50,7 @@ func printIndexedLine(index, line string) {
 	fmt.Printf("%s \t%s\n", coloredIndex, line)
 }
 
-func repl() error {
+func repl(commands Commands) error {
 	command, err := prompt()
 	if err != nil {
 		return err
@@ -77,10 +77,21 @@ func main() {
 		return
 	}
 
+	commands := Commands{
+		builtinExit{},
+		builtinNamespace{},
+		builtinShell{},
+		builtinGet{},
+	}
+	err := commands.Init()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	variables = make(map[string]string)
 	input = bufio.NewReader(os.Stdin)
 
-	err := pickNamespace()
+	err = pickNamespace()
 	if err == io.EOF {
 		return
 	} else if err != nil {
@@ -88,7 +99,7 @@ func main() {
 	}
 
 	for {
-		err = repl()
+		err = repl(commands)
 		if err == io.EOF {
 			break
 		}

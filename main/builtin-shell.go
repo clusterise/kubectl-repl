@@ -6,6 +6,10 @@ import (
 
 type builtinShell struct{}
 
+func (b builtinShell) init() error {
+	return nil
+}
+
 func (b builtinShell) filter(command string) bool {
 	return strings.HasPrefix(command, ";")
 }

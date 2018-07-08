@@ -10,6 +10,10 @@ import (
 
 type builtinNamespace struct{}
 
+func (b builtinNamespace) init() error {
+	return nil
+}
+
 func (b builtinNamespace) filter(command string) bool {
 	parts := strings.Split(command, " ")
 	return parts[0] == "namespace" || parts[0] == "ns"

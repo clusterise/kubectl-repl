@@ -12,12 +12,14 @@ var (
 
 type builtinGet struct{}
 
+func (b builtinGet) init() error {
+	var err error
+	outputRegexp, err = regexp.Compile(`^([^|]*)(-o|--output)(\s*=\s*|\s+)(json|yaml)`)
+	return err
+}
+
 // Apply to all "get" commands, ignoring flags
 func (b builtinGet) filter(command string) bool {
-	if outputRegexp == nil {
-		outputRegexp, _ = regexp.Compile(`^([^|]*)(-o|--output)(\s*=\s*|\s+)(json|yaml)`)
-	}
-
 	return strings.HasPrefix(command, "get") && !outputRegexp.MatchString(command) &&
 		!strings.Contains(command, " --help")
 }
