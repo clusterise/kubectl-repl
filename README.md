@@ -4,7 +4,7 @@ Kubectl REPL
 [![Go Report Card](https://goreportcard.com/badge/github.com/mikulas/kubectl-repl)](https://goreportcard.com/report/github.com/mikulas/kubectl-repl)
 [![Build Status](https://travis-ci.org/Mikulas/kubectl-repl.svg?branch=master)](https://travis-ci.org/Mikulas/kubectl-repl)
 
-Wrap `kubectl` with namespace and variables.
+Wrap `kubectl` with namespace and variables. Run commands in current namespace without copy and pasting all the time!  
 
 [![Asciinema Demo](demo/demo.gif)](https://asciinema.org/a/190677?autoplay=1)
 
@@ -27,7 +27,7 @@ Usage
 -----
 
 `./kubectl-repl` first starts by asking you for namespace. You may enter any of the strings verbatim,
-or any abbreviation that is closest. You may also use any of the variables REPL assigned (`$2`).
+or any abbreviation that is closest. You may also use any of the variables REPL assigned (`$2`, more on that in [#variables](#variables)).
 
 Then you are in the main REPL mode. You are presented with a prompt, into which you enter `kubectl` commands
 (`kubectl -n $NS` prefix is implied).
