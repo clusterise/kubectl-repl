@@ -5,12 +5,19 @@ import (
 	"testing"
 )
 
+func assertSubstituion(t *testing.T, expected, input string) {
+	out, err := substituteForVars(input)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, out)
+}
+
 func TestSubstitution(t *testing.T) {
 	variables = map[string][]string{
 		"a":   {"alpha"},
 		"aaa": {"triple"},
 	}
-	assert.Equal(t, "pre alpha post", substituteForVars("pre $a post"))
-	assert.Equal(t, "alphaalphaalpha", substituteForVars("$a$a$a"))
-	assert.Equal(t, "triple", substituteForVars("$aaa"))
+	assertSubstituion(t, "pre alpha post", "pre $a post")
+	assertSubstituion(t, "alphaalphaalpha", "$a$a$a")
+	assertSubstituion(t, "triple", "$aaa")
+}
 }

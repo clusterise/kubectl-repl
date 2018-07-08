@@ -42,7 +42,7 @@ func prompt() (string, error) {
 		return "", err
 	}
 	response := strings.Trim(line, "\n")
-	return substituteForVars(response), nil
+	return substituteForVars(response)
 }
 
 func printIndexedLine(index, line string) {
@@ -102,6 +102,8 @@ func main() {
 		err = repl(commands)
 		if err == io.EOF {
 			break
+		} else if err != nil {
+			color.New(color.FgRed).Println(err)
 		}
 	}
 }
