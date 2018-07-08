@@ -1,0 +1,10 @@
+kubectl-repl -context=minikube
+default
+get pods
+ns kubesys
+get pods | grep mini
+exec -it $3 sh
+whoami
+^D
+get svc
+; ping $2:4
