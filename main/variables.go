@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	variables map[string]string
+	variables map[string][]string
 	pattern   *regexp.Regexp
 )
 
@@ -16,7 +16,7 @@ func substituteForVars(text string) string {
 
 	return pattern.ReplaceAllStringFunc(text, func(match string) string {
 		if val, ok := variables[match[1:]]; ok {
-			return val
+			return val[0]
 		}
 		return match
 	})

@@ -88,7 +88,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	variables = make(map[string]string)
+	variables = make(map[string][]string)
 	input = bufio.NewReader(os.Stdin)
 
 	err = pickNamespace()

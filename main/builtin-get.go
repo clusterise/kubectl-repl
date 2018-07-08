@@ -40,6 +40,6 @@ func (b builtinGet) run(command string) error {
 			printIndexedLine(key, line)
 		}
 		key := fmt.Sprintf("%d", variableIndex)
-		variables[key] = splitRegexp.Split(line, -1)[0]
+		variables[key] = splitRegexp.Split(line, -1)
 	})
 }
