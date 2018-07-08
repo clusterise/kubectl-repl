@@ -43,6 +43,14 @@ To manage multiple clusters concurrently, it's possible to invoke repl with a `-
 current context set in your kubeconfig. You can run multiple repls at once with different context. For simple context
 management (and renaming), I recommend [ahmetb/kubectx](https://github.com/ahmetb/kubectx).
 
+Compatibility
+-------------
+
+All commands are passed either to `kubectl` or to your shell. That means you only have to upgrade your
+other tooling to support different Kubernetes versions.
+This repl does not introduce additional compatibility restrictions.
+
+
 Shell integration
 -----------------
 
