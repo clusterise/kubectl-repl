@@ -16,8 +16,9 @@ Installation
 It's recommended to use [rlwrap](https://github.com/hanslub42/rlwrap) in combination with `kubectl-repl`,
 such as `rlwrap kubectl-repl`. This adds prompt history, search, buffering etc.
 
-**Docker** container with prebuilt binary can be downloaded with `docker pull mikulas/kubectl-repl` ([Docker Hub](https://hub.docker.com/r/mikulas/kubectl-repl/)).
-Requires volume mount into `/root/.kube`, for example `-v ~/.kube:/root/.kube`. Container already includes rlwrap.
+**Docker** image with prebuilt binary can be downloaded with `docker pull mikulas/kubectl-repl` ([Docker Hub](https://hub.docker.com/r/mikulas/kubectl-repl/)).
+Requires volume mount into `/root/.kube`, for example `-v ~/.kube:/root/.kube:ro`. Docker image already includes rlwrap, but does not persist command
+history across multiple containers.
 
 Alternatively, download and **build locally**: see `Makefile` (`make build`). 
 
@@ -38,6 +39,9 @@ The prompt can be exited with traditional *eof* `^D` or *sigint* `^C`, and an ex
 If a command spawned long living process (such as `--follow`, `--watch` or `exec`), *sigint* will terminate the processes
 first and return to repl.
 
+To manage multiple clusters concurrently, it's possible to invoke repl with a `-context=$CTX` option. This overrides
+current context set in your kubeconfig. You can run multiple repls at once with different context. For simple context
+management (and renaming), I recommend [ahmetb/kubectx](https://github.com/ahmetb/kubectx).
 
 Shell integration
 -----------------
@@ -95,6 +99,18 @@ $ env TYPE=pod rlwrap ./kubectl-repl -verbose
 + kubectl -n default get $TYPE
 ```
 
+Furthermore, you can also access the other columns with a `$n:index` syntax. Without a column `$n` defaults to `$n:1`.  
+```console
+# beta kube-system get pods --all-namespaces
+  	NAMESPACE        NAME                READY STATUS   RESTARTS  AGE
+$1 	kube-monitoring  logspout-ds-9l4pw   1/1   Running  36        4d
+$2 	kube-monitoring  logspout-ds-b2pws   1/1   Running  9         3d
+$3 	kube-monitoring  logspout-ds-gs4nv   1/1   Running  0         4d
+# beta kube-system ; echo $1
+kube-monitoring
+# beta kube-system ; echo $1:2
+logspout-ds-9l4pw
+```
 
 Alternatives
 ------------
