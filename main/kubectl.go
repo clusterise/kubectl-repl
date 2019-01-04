@@ -103,7 +103,7 @@ func kubectl(cmd string) string {
 	// takes an option such as `get pods -l foo=bar`, so the `-l` would be parsed first.
 
 	if cmdPattern == nil {
-		cmdPattern = regexp.MustCompile(`[^\w\s]`)
+		cmdPattern = regexp.MustCompile(`(\s-|--|[[^\w\s]&&[^.-]])`)
 	}
 
 	splitAt := cmdPattern.FindStringIndex(cmd)
