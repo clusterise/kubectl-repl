@@ -10,6 +10,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"regexp"
+	"strings"
 	"syscall"
 )
 
@@ -103,7 +104,9 @@ func kubectl(cmd string) string {
 	// takes an option such as `get pods -l foo=bar`, so the `-l` would be parsed first.
 
 	if cmdPattern == nil {
-		cmdPattern = regexp.MustCompile(`(\s-|--|[[^\w\s]&&[^.-]])`)
+		// dash is treated specially as it can appear inside unquoted identifiers,
+		// such as node names; we must not split those identifiers with options
+		cmdPattern = regexp.MustCompile(`\s-|[>{}$!?'"()&;|]`)
 	}
 
 	splitAt := cmdPattern.FindStringIndex(cmd)
@@ -123,7 +126,6 @@ func kubectl(cmd string) string {
 		buffer.WriteString(" --namespace=")
 		buffer.WriteString(namespace)
 	}
-	buffer.WriteString(" ")
 	buffer.WriteString(cmdB)
-	return buffer.String()
+	return strings.TrimSpace(buffer.String())
 }
