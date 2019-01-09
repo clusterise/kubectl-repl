@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"os/user"
 	"strings"
 )
 
@@ -42,7 +43,7 @@ func prompt() (string, error) {
 		return "", err
 	}
 	response := strings.TrimSpace(line)
-	return substituteForVars(response)
+	return substituteForVars(substituteForAliases(response))
 }
 
 func printIndexedLine(index, line string) {
@@ -81,13 +82,22 @@ func main() {
 		return
 	}
 
+	usr, err := user.Current()
+    if err != nil {
+        log.Fatal( err )
+    }
+	err = loadAliasesFromFile(strings.Join([]string{usr.HomeDir, ".kubectlrepl"}, "/"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	commands := Commands{
 		builtinExit{},
 		builtinNamespace{},
 		builtinShell{},
 		builtinGet{},
 	}
-	err := commands.Init()
+	err = commands.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
