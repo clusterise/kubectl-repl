@@ -1,4 +1,4 @@
-FROM golang:1.10-alpine3.7 as build
+FROM golang:1.11-alpine3.9 as build
 
 ARG VERSION
 
@@ -12,7 +12,7 @@ RUN apk update && \
     chmod +x ./kubectl
 
 
-FROM alpine:3.7
+FROM alpine:3.9
 
 RUN echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories && \
     echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
