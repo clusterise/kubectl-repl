@@ -24,6 +24,9 @@ func sh(shell string) error {
 	}
 	cmd := exec.Command("/bin/sh", "-c", shell)
 
+	cmd.Env = append(os.Environ(),
+		fmt.Sprintf("KUBECTL_CONTEXT=%v", context),
+		fmt.Sprintf("KUBECTL_NAMESPACE=%v", namespace))
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
