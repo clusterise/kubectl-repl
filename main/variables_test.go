@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func assertSubstituion(t *testing.T, expected, input string) {
+func assertSubstitution(t *testing.T, expected, input string) {
 	out, err := substituteForVars(input)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, out)
@@ -16,9 +16,9 @@ func TestSubstitution(t *testing.T) {
 		"a":   {"alpha"},
 		"aaa": {"triple"},
 	}
-	assertSubstituion(t, "pre alpha post", "pre $a post")
-	assertSubstituion(t, "alphaalphaalpha", "$a$a$a")
-	assertSubstituion(t, "triple", "$aaa")
+	assertSubstitution(t, "pre alpha post", "pre $a post")
+	assertSubstitution(t, "alphaalphaalpha", "$a$a$a")
+	assertSubstitution(t, "triple", "$aaa")
 }
 
 func TestSubstitutionIndex(t *testing.T) {
@@ -26,7 +26,7 @@ func TestSubstitutionIndex(t *testing.T) {
 		"a":   {"alpha", "alpha2", "alpha3"},
 		"aaa": {"triple"},
 	}
-	assertSubstituion(t, "pre alpha post", "pre $a:1 post")
-	assertSubstituion(t, "alphaalpha2alpha3", "$a:1$a:2$a:3")
-	assertSubstituion(t, "triple", "$aaa")
+	assertSubstitution(t, "pre alpha post", "pre $a:1 post")
+	assertSubstitution(t, "alphaalpha2alpha3", "$a:1$a:2$a:3")
+	assertSubstitution(t, "triple", "$aaa")
 }

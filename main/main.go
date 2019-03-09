@@ -56,6 +56,10 @@ func repl(commands Commands) error {
 		return err
 	}
 
+	if strings.TrimSpace(command) == "" {
+		return nil
+	}
+
 	for _, builtin := range commands {
 		if builtin.filter(command) {
 			return builtin.run(command)
