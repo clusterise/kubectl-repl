@@ -56,7 +56,7 @@ func repl(commands Commands) error {
 		return err
 	}
 
-	if strings.TrimSpace(command) == "" {
+	if trimmed := strings.TrimSpace(command); trimmed == "" || strings.HasPrefix(trimmed, "#") {
 		return nil
 	}
 
