@@ -41,7 +41,7 @@ func prompt() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	response := strings.Trim(line, "\n")
+	response := strings.TrimSpace(line)
 	return substituteForVars(response)
 }
 
@@ -56,7 +56,7 @@ func repl(commands Commands) error {
 		return err
 	}
 
-	if trimmed := strings.TrimSpace(command); trimmed == "" || strings.HasPrefix(trimmed, "#") {
+	if command == "" {
 		return nil
 	}
 
