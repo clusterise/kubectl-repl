@@ -11,7 +11,7 @@ func (b builtinShell) init() error {
 }
 
 func (b builtinShell) filter(command string) bool {
-	return strings.HasPrefix(command, ";")
+	return strings.HasPrefix(command, ";") || strings.HasPrefix(command, "#")
 }
 
 func (b builtinShell) run(command string) error {
