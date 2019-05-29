@@ -74,7 +74,12 @@ func main() {
 	flag.BoolVar(&verbose, "verbose", false, "Verbose")
 	flag.BoolVar(&version, "version", false, "Print current version")
 	flag.StringVar(&context, "context", "", "Override current context")
+	flag.StringVar(&namespace, "namespace", "", "Override current context namespace")
 	flag.Parse()
+
+	if namespace == "" {
+		namespace = os.Getenv("KUBECTL_NAMESPACE")
+	}
 
 	if version {
 		fmt.Println(versionString)
@@ -95,11 +100,13 @@ func main() {
 	variables = make(map[string][]string)
 	input = bufio.NewReader(os.Stdin)
 
-	err = pickNamespace()
-	if err == io.EOF {
-		return
-	} else if err != nil {
-		log.Fatal(err)
+	if namespace == "" {
+		err = pickNamespace()
+		if err == io.EOF {
+			return
+		} else if err != nil {
+			log.Fatal(err)
+		}
 	}
 
 	for {
