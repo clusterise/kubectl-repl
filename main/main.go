@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
+	"github.com/chzyer/readline"
 	"github.com/fatih/color"
 	"io"
 	"log"
@@ -20,6 +21,7 @@ var (
 	namespace string
 	context   string
 	verbose   bool
+	rl *readline.Instance
 )
 
 func prompt() (string, error) {
@@ -37,7 +39,7 @@ func prompt() (string, error) {
 	}
 	fmt.Print(" ")
 
-	line, err := input.ReadString('\n')
+	line, err := rl.Readline()
 	if err != nil {
 		return "", err
 	}
@@ -86,13 +88,20 @@ func main() {
 		return
 	}
 
+	var err error
+	rl, err = readline.New("> ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rl.Close()
+
 	commands := Commands{
 		builtinExit{},
 		builtinNamespace{},
 		builtinShell{},
 		builtinGet{},
 	}
-	err := commands.Init()
+	err = commands.Init()
 	if err != nil {
 		log.Fatal(err)
 	}
