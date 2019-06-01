@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"github.com/chzyer/readline"
@@ -26,25 +27,32 @@ var (
 
 func prompt() (string, error) {
 	color.New(color.Bold).Print("# ")
+	prompt := bytes.NewBufferString("")
 
 	if context != "" {
-		color.New(color.FgBlack, color.Italic).Print(context)
-		fmt.Print(" ")
+		color.New(color.FgBlack, color.Italic).Fprint(prompt, context)
+		fmt.Fprint(prompt, " ")
 	}
 
 	if namespace != "" {
-		color.New(color.Bold).Print(namespace)
+		color.New(color.Bold).Fprint(prompt, namespace)
 	} else {
-		color.New(color.Bold).Print("namespace")
+		color.New(color.Bold).Fprint(prompt, "namespace")
 	}
-	fmt.Print(" ")
+	fmt.Fprint(prompt, " ")
 
+	rl.SetPrompt(prompt.String())
 	line, err := rl.Readline()
 	if err != nil {
 		return "", err
 	}
 	response := strings.TrimSpace(line)
-	return substituteForVars(response)
+	expandedCmd, err := substituteForVars(response)
+	if err != nil {
+		return "", err
+	}
+	err = rl.Operation.SaveHistory(expandedCmd)
+	return expandedCmd, err
 }
 
 func printIndexedLine(index, line string) {
@@ -89,7 +97,8 @@ func main() {
 	}
 
 	var err error
-	rl, err = readline.New("> ")
+	rl, err = readline.New("_ ")
+	rl.Config.DisableAutoSaveHistory = true
 	if err != nil {
 		log.Fatal(err)
 	}
